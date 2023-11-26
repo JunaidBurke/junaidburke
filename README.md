@@ -1,10 +1,12 @@
 Hi ![](https://user-images.githubusercontent.com/18350557/176309783-0785949b-9127-417c-8b55-ab5a4333674e.gif)My name is Junaid Burke
 ====================================================================================================================================
 
-A skilled software developer who creatively solves complex problems with technical expertise
+I'm Junaid Burke, a passionate and versatile software developer based in New Jersey, USA. With a rich skill set in Java, JavaScript, TypeScript, React, Astro, HTML, and CSS, I thrive on building efficient and user-friendly applications. My journey in the tech world is driven by my love for the latest AI developments and a keen interest in data analytics.
 
-* 🌍  I'm based in New Jersey
-* 🧠  I'm learning everything Full Stack Development
+When I'm not coding, you can find me immersed in the world of photography and digital content creation. I'm an avid reader, constantly exploring a mix of non-fiction, fiction, self-improvement books, and technology blogs. Currently, I'm honing my skills in algorithms, data structures, and design patterns, aiming to blend technical expertise with creative problem-solving.
+
+Let's connect and explore the endless possibilities in the tech universe!
+
 
 ### Skills
 
