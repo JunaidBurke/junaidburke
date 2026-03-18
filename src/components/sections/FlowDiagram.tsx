@@ -70,8 +70,8 @@ function VerticalDiagram({ steps }: { steps: FlowStep[] }) {
 
 function HorizontalDiagram({ steps }: { steps: FlowStep[] }) {
   return (
-    <div className="bg-bg-flow rounded-xl p-6 border border-border">
-      <div className="flex items-start">
+    <div className="bg-bg-flow rounded-xl p-6 border border-border overflow-x-auto">
+      <div className="flex items-start min-w-max">
         {steps.map((step, i) => (
           <FadeIn key={i} delay={i * 100} className="flex items-start flex-1 min-w-0">
             {/* Step column */}

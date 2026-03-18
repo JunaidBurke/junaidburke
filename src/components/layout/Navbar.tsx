@@ -34,15 +34,15 @@ export function Navbar() {
         scrolled ? 'border-border/50' : 'border-transparent',
       )}
     >
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <a
+        <Link
           href="/"
           className="flex items-center font-mono text-sm font-medium text-text"
         >
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-green mr-2" />
           junaidburke
-        </a>
+        </Link>
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-6">

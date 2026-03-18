@@ -9,7 +9,7 @@ export function BlogPreview() {
   const posts = getAllPosts().slice(0, 3)
 
   return (
-    <section className="py-20 px-6">
+    <section className="py-20 px-4 md:px-6">
       <div className="max-w-6xl mx-auto">
         <SectionHeading label="Blog" title="Latest Posts" />
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

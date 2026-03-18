@@ -61,7 +61,7 @@ export function InboxShowcase() {
       {emails.map((email, emailIndex) => (
         <div
           key={emailIndex}
-          className="bg-bg-flow border border-border rounded-lg p-4 flex items-center justify-between gap-4"
+          className="bg-bg-flow border border-border rounded-lg p-3 md:p-4 flex items-center justify-between gap-2 md:gap-4"
         >
           {/* Left side */}
           <div className="flex items-center gap-3 min-w-0">
@@ -74,12 +74,12 @@ export function InboxShowcase() {
             </div>
             {urgencyBadge[email.urgency] !== null ? (
               <span
-                className={`font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full shrink-0 ${urgencyBadge[email.urgency]}`}
+                className={`hidden sm:inline font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full shrink-0 ${urgencyBadge[email.urgency]}`}
               >
                 {urgencyLabel[email.urgency]}
               </span>
             ) : (
-              <span className="font-mono text-[10px] uppercase tracking-wider text-text-dim shrink-0">
+              <span className="hidden sm:inline font-mono text-[10px] uppercase tracking-wider text-text-dim shrink-0">
                 {urgencyLabel[email.urgency]}
               </span>
             )}

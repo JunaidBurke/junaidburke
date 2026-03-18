@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/Badge'
 
 export function Consulting() {
   return (
-    <section id="consulting" className="py-20 px-6">
+    <section id="consulting" className="py-20 px-4 md:px-6">
       <div className="max-w-6xl mx-auto">
         <SectionHeading
           label="Services"

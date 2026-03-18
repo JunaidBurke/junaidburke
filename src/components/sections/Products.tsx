@@ -6,7 +6,7 @@ import { InboxShowcase } from './InboxShowcase'
 
 export function Products() {
   return (
-    <section id="products" className="py-20 px-6">
+    <section id="products" className="py-20 px-4 md:px-6">
       <div className="max-w-6xl mx-auto">
         <SectionHeading
           label="Products"

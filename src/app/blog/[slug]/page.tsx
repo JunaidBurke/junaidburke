@@ -74,7 +74,7 @@ export default async function BlogPostPage({
   const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null
 
   return (
-    <section className="py-20 px-6 pt-24">
+    <section className="py-20 px-4 md:px-6 pt-24">
       <div className="max-w-6xl mx-auto flex gap-12">
         {/* Main content */}
         <article className="max-w-3xl flex-1 min-w-0">

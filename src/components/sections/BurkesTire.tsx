@@ -15,7 +15,7 @@ const STACK: [string, string][] = [
 
 export function BurkesTire() {
   return (
-    <section className="py-20 px-6">
+    <section className="py-20 px-4 md:px-6">
       <div className="max-w-6xl mx-auto">
         <SectionHeading label="Client Showcase" title="Burke's Tire & Auto Repair" />
 

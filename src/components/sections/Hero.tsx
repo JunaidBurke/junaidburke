@@ -16,7 +16,7 @@ const techStack = [
 export function Hero() {
   return (
     <FadeIn>
-      <section className="py-32 lg:py-40 px-6">
+      <section className="py-24 lg:py-40 px-4 md:px-6">
         <div className="max-w-4xl mx-auto text-center">
           {/* Tagline */}
           <p className="font-mono text-text-muted uppercase text-sm tracking-[0.2em] mb-6">
@@ -24,7 +24,7 @@ export function Hero() {
           </p>
 
           {/* H1 with gradient text */}
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-8">
+          <h1 className="text-3xl md:text-5xl lg:text-7xl font-bold leading-tight mb-8">
             I build{' '}
             <span className="gradient-text">AI-powered tools</span>
             {' '}for service businesses.

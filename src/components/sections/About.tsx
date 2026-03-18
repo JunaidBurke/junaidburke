@@ -11,7 +11,7 @@ const TIMELINE = [
 
 export function About() {
   return (
-    <section id="about" className="py-20 px-6">
+    <section id="about" className="py-20 px-4 md:px-6">
       <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12">
         {/* LEFT: Narrative */}
         <FadeIn>

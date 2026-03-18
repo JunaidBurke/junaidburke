@@ -21,7 +21,7 @@ const SOCIAL_LINKS = [
 export function Footer() {
   return (
     <footer className="border-t border-border py-8 mt-24">
-      <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="max-w-6xl mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center justify-between gap-4">
         <p className="text-text-dim text-sm font-mono">
           © 2026 Junaid Burke · junaidburke.com
         </p>

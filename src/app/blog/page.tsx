@@ -15,7 +15,7 @@ export default function BlogPage() {
   const tags = getAllTags()
 
   return (
-    <section className="py-20 px-6 pt-24">
+    <section className="py-20 px-4 md:px-6 pt-24">
       <div className="max-w-6xl mx-auto">
         <SectionHeading
           label="Blog"
