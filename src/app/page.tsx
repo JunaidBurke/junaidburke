@@ -1,4 +1,5 @@
 import { Hero } from '@/components/sections/Hero'
+import { Products } from '@/components/sections/Products'
 import { Testimonial } from '@/components/sections/Testimonial'
 import { Consulting } from '@/components/sections/Consulting'
 import { BurkesTire } from '@/components/sections/BurkesTire'
@@ -8,7 +9,7 @@ export default function Home() {
   return (
     <>
       <Hero />
-      {/* Products section will be added by Task 8 */}
+      <Products />
       <Testimonial />
       {/* Blog preview will be added by Task 20 */}
       <Consulting />
