@@ -1,9 +1,11 @@
+import Image from 'next/image'
 import { FadeIn } from '@/components/ui/FadeIn'
 import type { FlowStep } from '@/lib/products'
 
 interface FlowDiagramProps {
   steps: FlowStep[]
   orientation?: 'vertical' | 'horizontal'
+  mascot?: { src: string; alt: string }
 }
 
 type StepType = FlowStep['type']
@@ -35,9 +37,23 @@ function StepDot({ type }: { type: StepType }) {
   )
 }
 
-function VerticalDiagram({ steps }: { steps: FlowStep[] }) {
+function VerticalDiagram({ steps, mascot }: { steps: FlowStep[]; mascot?: { src: string; alt: string } }) {
   return (
-    <div className="bg-bg-flow rounded-xl p-6 border border-border">
+    <div className="relative bg-bg-flow rounded-xl p-6 border border-border">
+      {mascot && (
+        <div
+          className="absolute bottom-4 right-4 opacity-80"
+          style={{ animation: 'wave 2.5s ease-in-out infinite', transformOrigin: 'bottom center' }}
+        >
+          <Image
+            src={mascot.src}
+            alt={mascot.alt}
+            width={64}
+            height={64}
+            className="drop-shadow-[0_0_8px_rgba(62,232,255,0.2)]"
+          />
+        </div>
+      )}
       {steps.map((step, i) => (
         <FadeIn key={i} delay={i * 100}>
           <div className="flex items-start">
@@ -101,9 +117,9 @@ function HorizontalDiagram({ steps }: { steps: FlowStep[] }) {
   )
 }
 
-export function FlowDiagram({ steps, orientation = 'vertical' }: FlowDiagramProps) {
+export function FlowDiagram({ steps, orientation = 'vertical', mascot }: FlowDiagramProps) {
   if (orientation === 'horizontal') {
     return <HorizontalDiagram steps={steps} />
   }
-  return <VerticalDiagram steps={steps} />
+  return <VerticalDiagram steps={steps} mascot={mascot} />
 }

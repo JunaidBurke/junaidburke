@@ -7,10 +7,10 @@ import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { cn } from '@/lib/utils'
 
 const NAV_LINKS = [
-  { label: 'Products', href: '#products' },
+  { label: 'Products', href: '/#products' },
   { label: 'Blog', href: '/blog', isRoute: true },
-  { label: 'About', href: '#about' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'About', href: '/#about' },
+  { label: 'Contact', href: '/#contact' },
 ]
 
 export function Navbar() {

@@ -49,6 +49,7 @@ export function ProductBlock({ product, reversed = false, showcase }: ProductBlo
         <FlowDiagram
           steps={product.flow}
           orientation={product.flowOrientation ?? 'vertical'}
+          mascot={product.mascot}
         />
       </div>
     </div>

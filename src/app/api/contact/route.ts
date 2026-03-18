@@ -8,7 +8,27 @@ const contactSchema = z.object({
   message: z.string().min(10, 'Message must be at least 10 characters'),
   honeypot: z.string().max(0),
   subject: z.string().optional(),
+  turnstileToken: z.string().min(1, 'Verification required'),
 })
+
+interface TurnstileResponse {
+  success: boolean
+  'error-codes'?: string[]
+}
+
+async function verifyTurnstile(token: string): Promise<boolean> {
+  const secret = process.env.TURNSTILE_SECRET_KEY
+  if (!secret) return false
+
+  const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ secret, response: token }),
+  })
+
+  const data = (await res.json()) as TurnstileResponse
+  return data.success
+}
 
 export async function POST(request: Request) {
   try {
@@ -17,6 +37,11 @@ export async function POST(request: Request) {
 
     if (validated.honeypot) {
       return NextResponse.json({ success: true })
+    }
+
+    const turnstileValid = await verifyTurnstile(validated.turnstileToken)
+    if (!turnstileValid) {
+      return NextResponse.json({ error: 'Verification failed. Please try again.' }, { status: 403 })
     }
 
     if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY === 're_placeholder') {

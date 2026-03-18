@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, type FormEvent } from 'react'
+import { useState, useRef, useCallback, useEffect, type FormEvent } from 'react'
+import Script from 'next/script'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { FadeIn } from '@/components/ui/FadeIn'
 import { Github, Linkedin, Twitter, Mail, Calendar, Send } from 'lucide-react'
@@ -45,10 +46,42 @@ const SOCIAL_LINKS = [
   },
 ] as const
 
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (container: string | HTMLElement, options: Record<string, unknown>) => string
+      reset: (widgetId: string) => void
+      remove: (widgetId: string) => void
+    }
+  }
+}
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? ''
+
 export function Contact() {
   const [form, setForm] = useState<FormState>(initialForm)
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState<string>('')
+  const [turnstileToken, setTurnstileToken] = useState<string>('')
+  const turnstileRef = useRef<HTMLDivElement>(null)
+  const widgetIdRef = useRef<string | null>(null)
+
+  const renderTurnstile = useCallback(() => {
+    if (!window.turnstile || !turnstileRef.current || widgetIdRef.current) return
+    widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
+      sitekey: TURNSTILE_SITE_KEY,
+      theme: 'dark',
+      callback: (token: string) => setTurnstileToken(token),
+      'expired-callback': () => setTurnstileToken(''),
+      'error-callback': () => setTurnstileToken(''),
+    })
+  }, [])
+
+  useEffect(() => {
+    if (window.turnstile && turnstileRef.current && !widgetIdRef.current) {
+      renderTurnstile()
+    }
+  }, [renderTurnstile])
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -59,16 +92,26 @@ export function Contact() {
     setStatus('loading')
     setErrorMessage('')
 
+    if (!turnstileToken) {
+      setErrorMessage('Please complete the verification.')
+      setStatus('error')
+      return
+    }
+
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, turnstileToken }),
       })
 
       if (res.ok) {
         setStatus('success')
         setForm(initialForm)
+        setTurnstileToken('')
+        if (widgetIdRef.current && window.turnstile) {
+          window.turnstile.reset(widgetIdRef.current)
+        }
       } else {
         const data = await res.json() as { error?: string | { formErrors?: string[] } }
         const msg =
@@ -131,9 +174,15 @@ export function Contact() {
               className={INPUT_CLASS + ' resize-none'}
             />
 
+            <div ref={turnstileRef} className="flex justify-center" />
+            <Script
+              src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+              onReady={renderTurnstile}
+            />
+
             <button
               type="submit"
-              disabled={status === 'loading'}
+              disabled={status === 'loading' || !turnstileToken}
               className="flex items-center justify-center gap-2 w-full bg-green text-bg font-semibold
                          rounded-lg px-6 py-3 text-sm hover:bg-green/90 transition-colors duration-200
                          disabled:opacity-60 disabled:cursor-not-allowed min-h-[44px]"

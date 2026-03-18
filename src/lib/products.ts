@@ -13,6 +13,7 @@ export interface Product {
   flow: FlowStep[]
   flowOrientation?: 'vertical' | 'horizontal'
   tech: string[]
+  mascot?: { src: string; alt: string }
   cta: { label: string; href: string }
 }
 
@@ -20,29 +21,82 @@ export const products: Product[] = [
   {
     slug: 'ottomanagerpro',
     name: 'OttoManagerPro',
-    badge: { text: 'A2P Approved · Launch Ready', variant: 'live' },
+    badge: { text: 'A2P Approved · Live', variant: 'live' },
     intro:
-      'SMS-based AI service advisor for auto repair shops. Customers text in, Claude classifies intent, retrieves shop context from Supabase, generates a response, and gates on confidence before sending.',
+      'AI shop manager that books appointments via website chat, sends smart SMS reminders when vehicles are due for service, and tracks customer retention — so shop owners can focus on turning wrenches.',
     howItWorks:
-      'Inbound SMS hits a Twilio webhook, which triggers an intent classification pass through Claude. The system pulls customer history and shop context from Supabase, generates a contextual response, runs it through a confidence gate, and delivers via SMS — all in under 3 seconds.',
+      'Connect your customer and vehicle data. Otto monitors service histories and calculates when each vehicle is due. Smart SMS reminders go out automatically — customers reply to book, and the appointment lands on your calendar.',
     flow: [
-      { label: 'Customer SMS', type: 'input' },
-      { label: 'Twilio Webhook', type: 'process' },
-      { label: 'Intent Classification', sublabel: 'LLM: Claude', type: 'llm' },
-      { label: 'Context Retrieval', sublabel: 'Supabase', type: 'data' },
-      { label: 'Response Generation', sublabel: 'LLM: Claude', type: 'llm' },
-      { label: 'Confidence Gate', type: 'gate' },
-      { label: 'SMS Delivered', type: 'output' },
+      { label: 'Customer Data Import', type: 'input' },
+      { label: 'Otto Monitors & Tracks', type: 'process' },
+      { label: 'AI Calculates Due Dates', sublabel: 'LLM: Claude', type: 'llm' },
+      { label: 'Smart SMS Reminders', type: 'output' },
+      { label: 'Customer Replies', type: 'input' },
+      { label: 'Appointment Booked', type: 'output' },
     ],
     tech: [
       'Twilio SMS',
       'Anthropic Claude',
-      'Supabase (otto_v2)',
-      'Next.js API Routes',
+      'Supabase',
+      'Next.js',
       'Clerk Auth',
       'Stripe Billing',
+      'AI Website Chat',
     ],
-    cta: { label: 'View Product', href: '/products/ottomanagerpro' },
+    mascot: { src: '/images/otto-otto.png', alt: 'Otto — the AI shop manager mascot' },
+    cta: { label: 'Visit OttoManagerPro', href: 'https://www.ottomanagerpro.com' },
+  },
+  {
+    slug: 'tiremanagerpro',
+    name: 'TireManagerPro',
+    badge: { text: 'V2 · Live', variant: 'live' },
+    intro:
+      'Production SaaS for tire shops — POS, used & new tire inventory, purchasing pipeline with dealer/distributor management, analytics, and multi-tenant team management with role-based access.',
+    howItWorks:
+      'Daily operations flow from point-of-sale transactions through inventory updates across used and new tire catalogs, into purchasing workflows with dealers and distributors, and close out with EOD reconciliation and analytics reporting.',
+    flow: [
+      { label: 'Point of Sale', type: 'input' },
+      { label: 'Inventory Management', sublabel: 'Used & New Catalogs', type: 'process' },
+      { label: 'Purchasing Pipeline', sublabel: 'Dealers & Distributors', type: 'process' },
+      { label: 'Analytics & Reporting', type: 'data' },
+      { label: 'Clerk Auth + RBAC', sublabel: 'Team & Roles', type: 'gate' },
+      { label: 'Real-Time Multi-Tenant', type: 'output' },
+    ],
+    tech: [
+      'Next.js 16',
+      'Supabase RLS',
+      'Clerk RBAC',
+      'Zod',
+      'shadcn/ui',
+      'Stripe Billing',
+    ],
+    cta: { label: 'Visit TireManagerPro', href: 'https://www.tiremanagerpro.com' },
+  },
+  {
+    slug: 'cleanbuddypro',
+    name: 'CleanBuddyPro',
+    badge: { text: 'Live', variant: 'live' },
+    intro:
+      'All-in-one business management for specialty cleaning pros — estimates, invoicing, Stripe payments, expense tracking, a branded customer portal with magic-link access, and team management with RBAC.',
+    howItWorks:
+      'Create estimates from service templates, send via branded portal. Customers accept and pay online 24/7. Accepted estimates auto-convert to invoices with configurable payment reminders. Recurring clients get auto-generated invoices on schedule. Track expenses, generate P&L and tax reports.',
+    flow: [
+      { label: 'Estimates & Templates', type: 'input' },
+      { label: 'Customer Portal', sublabel: 'Magic-Link Access', type: 'process' },
+      { label: 'Invoicing & Payments', sublabel: 'Stripe + Auto-Reminders', type: 'process' },
+      { label: 'Expense Tracking', sublabel: 'COGS & Overhead', type: 'data' },
+      { label: 'Team RBAC', sublabel: 'Role-Based Access', type: 'gate' },
+      { label: 'P&L & Tax Reports', type: 'output' },
+    ],
+    tech: [
+      'Next.js',
+      'Supabase',
+      'Clerk Auth',
+      'Stripe Billing',
+      'Customer Portal',
+      'Automated Reminders',
+    ],
+    cta: { label: 'Visit CleanBuddyPro', href: 'https://www.cleanbuddypro.com' },
   },
   {
     slug: 'inbox-command-center',
@@ -68,30 +122,6 @@ export const products: Product[] = [
     cta: { label: 'View Product', href: '/products/inbox-command-center' },
   },
   {
-    slug: 'tiremanagerpro',
-    name: 'TireManagerPro',
-    badge: { text: 'V2 · Pre-Launch', variant: 'beta' },
-    intro:
-      'Full-stack auto repair shop management — rebuilt from the ground up after V1 died to feature creep. V2 ships with RLS-enforced multi-tenancy and role-based views.',
-    howItWorks:
-      'Clerk handles auth and org-level RBAC. Every database query passes through Supabase RLS policies using public.is_org_member(org_id). All mutations are Zod-validated before touching the database.',
-    flow: [
-      { label: 'Clerk Auth', type: 'input' },
-      { label: 'Role-Based Views', type: 'process' },
-      { label: 'Supabase RLS', sublabel: 'is_org_member(org_id)', type: 'data' },
-      { label: 'Zod Validation', type: 'gate' },
-      { label: 'Real-Time Sync', type: 'output' },
-    ],
-    tech: [
-      'Next.js 14+',
-      'Supabase RLS (tire_v2)',
-      'Clerk RBAC',
-      'Zod',
-      'Tailwind/shadcn',
-    ],
-    cta: { label: 'View Product', href: '/products/tiremanagerpro' },
-  },
-  {
     slug: 'fieldagent-ai',
     name: 'FieldAgent AI',
     badge: { text: 'PRD Complete', variant: 'dev' },
@@ -115,29 +145,6 @@ export const products: Product[] = [
       'Next.js',
     ],
     cta: { label: 'View Product', href: '/products/fieldagent-ai' },
-  },
-  {
-    slug: 'cleanbuddypro',
-    name: 'CleanBuddyPro',
-    badge: { text: 'In Development', variant: 'dev' },
-    intro:
-      'Cleaning business management built from real pain-point gap analysis. Job scheduling, crew dispatch, and automated invoicing on the shared Supabase platform.',
-    howItWorks:
-      'Runs on the shared 6-schema Supabase platform. A recurring job scheduler triggers crew dispatch based on availability and location, then auto-generates invoices via Stripe.',
-    flow: [
-      { label: 'Shared Supabase Platform', sublabel: '6 schemas', type: 'data' },
-      { label: 'Job Scheduler', type: 'process' },
-      { label: 'Crew Dispatch', type: 'process' },
-      { label: 'Invoice Generation', type: 'output' },
-    ],
-    tech: [
-      'Next.js',
-      'Supabase (cleanbuddy)',
-      'Recurring Scheduler',
-      'Stripe Invoicing',
-      'Crew Management',
-    ],
-    cta: { label: 'View Product', href: '/products/cleanbuddypro' },
   },
   {
     slug: 'frameit',
