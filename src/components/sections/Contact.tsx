@@ -63,6 +63,7 @@ export function Contact() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [turnstileToken, setTurnstileToken] = useState<string>('')
+  const [scriptReady, setScriptReady] = useState(false)
   const turnstileRef = useRef<HTMLDivElement>(null)
   const widgetIdRef = useRef<string | null>(null)
 
@@ -77,11 +78,12 @@ export function Contact() {
     })
   }, [])
 
+  // Fires once both the script is ready AND the ref div is in the DOM
   useEffect(() => {
-    if (window.turnstile && turnstileRef.current && !widgetIdRef.current) {
+    if (scriptReady && turnstileRef.current && !widgetIdRef.current) {
       renderTurnstile()
     }
-  }, [renderTurnstile])
+  }, [scriptReady, renderTurnstile])
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -174,28 +176,33 @@ export function Contact() {
               className={INPUT_CLASS + ' resize-none'}
             />
 
-            <div ref={turnstileRef} className="flex justify-center" />
+            {/* Turnstile script — rendered outside the flex row so it doesn't affect layout */}
             <Script
               src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
-              onReady={renderTurnstile}
+              onReady={() => setScriptReady(true)}
             />
 
-            <button
-              type="submit"
-              disabled={status === 'loading' || !turnstileToken}
-              className="flex items-center justify-center gap-2 w-full bg-green text-bg font-semibold
-                         rounded-lg px-6 py-3 text-sm hover:bg-green/90 transition-colors duration-200
-                         disabled:opacity-60 disabled:cursor-not-allowed min-h-[44px]"
-            >
-              {status === 'loading' ? (
-                'Sending...'
-              ) : (
-                <>
-                  <Send className="w-4 h-4" />
-                  Send Message
-                </>
-              )}
-            </button>
+            <div className="flex items-center gap-4">
+              {/* Explicit dimensions prevent the container from collapsing before the iframe loads */}
+              <div ref={turnstileRef} className="min-h-[65px] min-w-[300px]" />
+
+              <button
+                type="submit"
+                disabled={status === 'loading' || !turnstileToken}
+                className="flex items-center justify-center gap-2 bg-green text-bg font-semibold
+                           rounded-lg px-6 py-3 text-sm hover:bg-green/90 transition-colors duration-200
+                           disabled:opacity-60 disabled:cursor-not-allowed min-h-[44px] whitespace-nowrap"
+              >
+                {status === 'loading' ? (
+                  'Sending...'
+                ) : (
+                  <>
+                    <Send className="w-4 h-4" />
+                    Send Message
+                  </>
+                )}
+              </button>
+            </div>
 
             {status === 'success' && (
               <p className="text-green text-sm text-center">Message sent!</p>
