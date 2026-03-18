@@ -1,0 +1,58 @@
+---
+title: "What I Learned Building an SMS AI Advisor for Auto Repair Shops"
+description: "Real-world lessons from building OttoManagerPro — from A2P registration to confidence gating."
+date: "2026-03-01"
+tags: ["OttoManagerPro", "Twilio", "LLM", "Auto Repair"]
+category: "Industry Insights"
+published: true
+---
+
+Auto repair shops do not use apps. The techs are under cars. The service writers are at the counter. The owner is usually in the shop. The one device everyone has with them and actually responds to is their phone — specifically, SMS. That insight drove every architectural decision in OttoManagerPro.
+
+## The A2P 10DLC Registration Gauntlet
+
+Before a single message goes out, you have to register your brand and campaigns with The Campaign Registry through your carrier (Twilio, in our case). A2P 10DLC registration exists to combat spam, which is legitimate, but the process is opaque.
+
+Lessons from the registration process:
+
+- **Brand registration** takes 1-3 business days and requires a real EIN
+- **Campaign use case** matters — "mixed" campaigns get lower throughput than specific ones; register as "customer care" if that is accurate
+- **Message samples** must match what you actually send — vague samples cause rejections
+- Plan for 2-3 weeks before your first message goes out in production
+
+## Intent Classification with Claude
+
+Every inbound SMS goes through an intent classifier before any action is taken. The classifier uses a structured prompt to map raw text to one of a defined set of intents:
+
+```typescript
+const INTENT_PROMPT = `
+You are classifying SMS messages from auto repair shop staff.
+
+Classify the message into exactly one of these intents:
+- JOB_STATUS_REQUEST: asking about a vehicle's repair status
+- PARTS_INQUIRY: asking about parts availability or pricing
+- SCHEDULE_REQUEST: requesting an appointment or time slot
+- CUSTOMER_CALLBACK: requesting a customer be called back
+- UNKNOWN: does not fit any category above
+
+Respond with JSON only: { "intent": "<INTENT>", "confidence": <0.0-1.0>, "entities": {} }
+
+Message: "${message}"
+`.trim()
+```
+
+The confidence score is not cosmetic — it gates what happens next.
+
+## The Confidence Gating Pattern
+
+An LLM that acts on low-confidence classifications makes shops lose trust in the tool immediately. The confidence gate works like this:
+
+- **Confidence >= 0.85**: Execute the intent automatically, send confirmation SMS
+- **Confidence 0.60-0.84**: Send a clarification SMS ("Did you mean X or Y?")
+- **Confidence < 0.60**: Route to the human queue, flag for manual review
+
+This single pattern cut incorrect auto-actions to near zero in testing. The threshold is configurable per shop — some owners want higher autonomy, others want more human review.
+
+## Why SMS-First Is the Right Call for This Market
+
+Every app I showed to shop technicians got the same response: "I'm not going to remember to open that." SMS requires nothing. It is already open. For a market that runs on urgency — a customer waiting for their car, a part arriving, a job finishing — the 98% open rate of SMS is not just a metric, it is the product.

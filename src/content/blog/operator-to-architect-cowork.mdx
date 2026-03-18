@@ -1,0 +1,40 @@
+---
+title: "From Operator to Architect: Building an AI Chief of Staff with Claude Cowork"
+description: "How I turned repetitive daily tasks into a 5-layer AI workflow architecture."
+date: "2026-03-15"
+tags: ["Cowork", "AI Workflow", "Claude"]
+category: "AI & Agents"
+published: true
+---
+
+Every solo founder hits the same wall: you are simultaneously the CEO, the engineer, the support team, and the operations person. The tasks that eat the most time are not the hard ones — they are the repetitive, low-judgment ones. Reading the same categories of email. Triaging the same types of issues. Checking the same dashboards. Claude Cowork is my attempt to delegate that layer.
+
+## The 5-Layer Architecture
+
+Cowork is not a chatbot. It is a structured workflow system built across five layers:
+
+1. **Data** — Raw inputs: Gmail threads, calendar events, Supabase query results, Notion pages
+2. **Processing** — Normalization and enrichment: parsing emails into structured objects, tagging urgency
+3. **Skill** — Domain-specific logic packaged as reusable CLAUDE.md skill files
+4. **Orchestration** — The layer that chains skills together and decides what runs next
+5. **Interface** — How results surface: Slack digest, email draft, terminal output, or Notion update
+
+Each layer has a single responsibility. Adding a new skill means writing one file — the orchestration layer handles the rest.
+
+## The Inbox Command Center Skill
+
+The first skill I shipped handles email triage. It reads a batch of Gmail threads, classifies each by urgency and category, drafts responses for anything that needs a reply, and writes a prioritized digest.
+
+The Gmail API integration pulls threads via OAuth. Claude reads each thread in full context — not just the subject line — and applies a classification rubric:
+
+- **P0**: Needs same-day action (customer issue, payment problem, legal)
+- **P1**: Needs response within 48 hours (partnership, hiring, vendor)
+- **P2**: FYI or async (newsletters, receipts, digests)
+
+Urgency classification runs locally. No email content leaves for a third-party classifier — it goes directly to the Claude API under my key.
+
+## What This Unlocks
+
+Before Cowork, my morning started with 30 minutes of inbox triage. That time now goes to building. The pattern is transferable: any repeated judgment task — sprint planning, metrics review, customer feedback synthesis — can become a skill with a well-defined input schema and a clear output contract.
+
+The architecture is intentionally boring. Skills are markdown files. Orchestration is a TypeScript runner. The power is in the compounding: each new skill makes the whole system more useful without touching the layers below it.

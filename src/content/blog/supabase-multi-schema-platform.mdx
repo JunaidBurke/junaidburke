@@ -1,0 +1,56 @@
+---
+title: "How I Built a 6-Schema Supabase Platform for Multiple SaaS Products"
+description: "Multi-tenant RLS, shared auth layer, and why one monorepo beats five repos."
+date: "2026-03-20"
+tags: ["Architecture", "Supabase", "Multi-Tenant"]
+category: "Engineering"
+published: true
+---
+
+When I started building multiple SaaS products in parallel — OttoManagerPro, TireManagerPro, FieldAgent AI, CleanBuddy, FrameIt — the obvious move was one repo per product. I got three repos in before realizing that path leads to duplicated auth code, diverging utilities, and four times the maintenance burden. The answer was a single Supabase project with six isolated schemas.
+
+## The Schema Layout
+
+Each product lives in its own schema: `otto_v2`, `tire_v2`, `fieldagent_ai`, `cleanbuddy`, `frameit`. A sixth schema — `shared` — owns everything that crosses product lines: organizations, subscriptions, and the auth bridge to Clerk.
+
+This gives me hard data isolation without spinning up separate Supabase projects, separate billing, or separate connection pools.
+
+## Row-Level Security Done Once
+
+The `shared` schema exposes a reusable helper function that every product schema can call in its RLS policies:
+
+```sql
+-- shared schema helper
+create or replace function public.is_org_member(org_id uuid)
+returns boolean
+language sql
+security definer
+stable
+as $$
+  select exists (
+    select 1
+    from shared.org_members
+    where organization_id = org_id
+      and user_id = auth.uid()
+      and status = 'active'
+  );
+$$;
+
+-- Usage in otto_v2 schema
+create policy "Technicians can read their org vehicles"
+  on otto_v2.vehicles
+  for select
+  using (public.is_org_member(organization_id));
+```
+
+Writing the policy once and reusing it across schemas eliminates the class of bugs where one product ships stricter RLS than another.
+
+## Clerk as the Auth Layer
+
+Supabase handles data; Clerk handles identity. A Supabase Edge Function verifies Clerk JWTs and exchanges them for scoped Supabase tokens. Every RLS policy evaluates `auth.uid()` which maps to the Clerk user ID. This means I get Clerk's auth UX — passkeys, MFA, org switching — without giving up Supabase's row-level security.
+
+## Why One Monorepo Wins
+
+Shared TypeScript types, shared Zod schemas, shared email templates. When I fix a bug in the org-member lookup, every product gets the fix in the same commit. The tradeoff is that schema migrations require more care — a breaking change in `shared` touches everything. But that's a discipline problem, not an architecture problem.
+
+This setup has held up through building three products simultaneously. The schema isolation is tight enough that each product team (currently: just me) can move independently.

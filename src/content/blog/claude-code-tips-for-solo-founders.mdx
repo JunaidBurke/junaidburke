@@ -1,0 +1,51 @@
+---
+title: "My Top Claude Code Workflows for Shipping Faster as a Solo Founder"
+description: "Practical workflows for using Claude Code to build, test, and ship features solo."
+date: "2026-03-05"
+tags: ["Claude Code", "Tooling", "Productivity", "Solo Founder"]
+category: "Tools & Workflow"
+published: true
+---
+
+Claude Code is the closest thing I have found to a senior engineer on call at 11pm. But the gap between using it as a fancy autocomplete and using it as a genuine force multiplier comes down to workflow. Here are the patterns that have made the biggest difference.
+
+## CLAUDE.md as Living Project Context
+
+Every project gets a `CLAUDE.md` at the root. This file is not documentation — it is an instruction set for Claude that loads automatically at the start of every session. It tells Claude what the stack is, what the conventions are, what is off-limits, and what the current sprint is focused on.
+
+```markdown
+# Project: TireManagerPro
+
+## Stack
+Next.js 15 App Router · TypeScript · Tailwind · Supabase · Clerk · Stripe
+
+## Current Sprint
+Building: Job management module (create, assign, status transitions)
+Not building: Inventory, invoicing, reporting — these are [FUTURE]
+
+## Conventions
+- Server components by default
+- Zod validation on all API routes
+- Feature folder structure: src/features/jobs/
+- No `any` types — use `unknown` if genuinely unknown
+
+## Database
+Schema: tire_v2
+RLS is enabled on all tables — always use the Supabase client, never service role key on the client
+```
+
+A well-written `CLAUDE.md` means you spend zero time re-explaining the project in every session.
+
+## Multi-File Refactors Without Fear
+
+When I need to rename a pattern across 20 files — a prop, a type, a function signature — I describe the refactor in plain language and let Claude handle the grep-and-replace work. The key is being specific: "Rename `userId` to `clerkId` in all API routes and update the Zod schemas that reference it." Vague instructions produce vague results.
+
+## Async Code Review Workflow
+
+Before committing, I paste the diff and ask: "Review this for type safety issues, missing error handling, and anything that violates the conventions in CLAUDE.md." This catches the class of bugs that look fine in isolation but break under the project's specific constraints.
+
+## Slash Commands for Repeated Tasks
+
+Custom slash commands in `.claude/commands/` let me trigger full workflows — generate a Supabase migration from a schema description, scaffold a new feature folder with the standard file set, run a pre-commit checklist. The investment in writing the command pays back on every use.
+
+The throughline: Claude Code is not magic. It is a force multiplier on clear thinking. The clearer your conventions and the tighter your scope, the more leverage you get.
