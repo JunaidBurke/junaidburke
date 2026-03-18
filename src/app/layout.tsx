@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { Outfit, JetBrains_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import { ThemeProvider } from '@/components/layout/ThemeProvider'
+import { Navbar } from '@/components/layout/Navbar'
+import { Footer } from '@/components/layout/Footer'
 import './globals.css'
 
 const outfit = Outfit({
@@ -64,7 +66,9 @@ export default function RootLayout({
             <div className="absolute top-[40%] right-[-300px] w-[500px] h-[500px] rounded-full bg-purple/5 blur-[120px]" />
             <div className="absolute bottom-[-200px] left-[20%] w-[400px] h-[400px] rounded-full bg-orange/[0.03] blur-[100px]" />
           </div>
-          <main className="relative z-10">{children}</main>
+          <Navbar />
+          <main className="relative z-10 pt-16">{children}</main>
+          <Footer />
           <Analytics />
         </ThemeProvider>
       </body>
