@@ -1,6 +1,7 @@
 import { Hero } from '@/components/sections/Hero'
 import { Products } from '@/components/sections/Products'
 import { Testimonial } from '@/components/sections/Testimonial'
+import { BlogPreview } from '@/components/sections/BlogPreview'
 import { Consulting } from '@/components/sections/Consulting'
 import { BurkesTire } from '@/components/sections/BurkesTire'
 import { About } from '@/components/sections/About'
@@ -12,7 +13,7 @@ export default function Home() {
       <Hero />
       <Products />
       <Testimonial />
-      {/* Blog preview will be added by Task 20 */}
+      <BlogPreview />
       <Consulting />
       <BurkesTire />
       <About />
