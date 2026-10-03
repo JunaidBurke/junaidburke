@@ -10,10 +10,13 @@ I build AI-powered software that small businesses use every day.
 - **[OttoManagerPro](https://ottomanagerpro.com)**: SMS AI service advisor for auto repair shops; Twilio A2P 10DLC approved
 - **[Biblio](https://biblioreader.com)**: private English & Urdu digital library, 4,000+ books
 
+Architecture notes and public demos: [ai-products-showcase](https://github.com/JunaidBurke/ai-products-showcase) · [tire-tread](https://github.com/JunaidBurke/tire-tread)
+
 ## Stack
 
-TypeScript · Python · Next.js · PostgreSQL · Supabase · Convex · Twilio
-LLM tool calling · structured outputs · vision
+- **Languages and frameworks:** TypeScript, Python, Next.js
+- **Data and services:** PostgreSQL, Supabase, Convex, Twilio
+- **AI:** LLM tool calling, structured outputs, vision
 
 ## Connect
 
